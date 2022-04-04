@@ -1,0 +1,27 @@
+{%extends 'base.html'%} {%block title%} Cupcakes! {%endblock%} {%block content%}
+<div>Here are the cupcakes.</div>
+
+<div>
+  <ul id="cupcakeList">
+    <!-- populate list -->
+    <!-- <li>
+      <img src="https://tinyurl.com/demo-cupcake" alt="cupcakeList" /> Flavor:
+      vanilla, Size: large, Rating: 10
+    </li> -->
+  </ul>
+</div>
+
+<div>
+  <form action="/api/cupcakes" method="POST">
+    <label for="flavor">Flavor</label>
+    <input type="text" name="flavor" id="flavor" />
+    <label for="size">Size</label>
+    <input type="text" name="size" id="size" />
+    <label for="rating">Rating</label>
+    <input type="text" name="rating" id="rating" />
+    <label for="image">Image URL</label>
+    <input type="text" name="image" id="image" />
+    <button>Submit</button>
+  </form>
+</div>
+{%endblock%}

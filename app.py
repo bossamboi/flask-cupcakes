@@ -1,4 +1,4 @@
-from flask import Flask, request, json, jsonify
+from flask import Flask, render_template, request, json, jsonify
 from models import Cupcake, db, connect_db, DEFAULT_IMG
 
 """Flask app for Cupcakes"""
@@ -87,3 +87,10 @@ def delete_cupcake(cupcake_id):
     db.session.delete(cupcake)
     db.session.commit()
     return jsonify(deleted=cupcake_id)
+
+@app.get('/')
+def show_cupcakes():
+    """Show cupcake list"""
+
+
+    return render_template('index.html')
