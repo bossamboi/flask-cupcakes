@@ -1,8 +1,16 @@
 "use strict";
 
 const $cupcakeList = $("#cupcakeList");
+const $submitForm = $("#submitCupcakeForm");
+const $flavorInput = $("#flavor");
+const $sizeInput = $("#size");
+const $ratingInput = $("#rating");
+const $imageInput = $("#image");
+
+/** Clear and populate cupcakes list */
 
 async function showCupcakes() {
+  $cupcakeList.html("");
   let response = await axios.get("/api/cupcakes");
 
   const cupcakes = response.data.cupcakes;
@@ -21,4 +29,29 @@ async function showCupcakes() {
   }
 }
 
+/** Handles cupcake addition and adds new cupcake to list*/
+
+async function handleForm(evt) {
+  evt.preventDefault();
+
+  const flavor = $flavorInput.val();
+  const size = $sizeInput.val();
+  const rating = $ratingInput.val();
+  const image = $imageInput.val();
+
+  await axios.post("/api/cupcakes", {
+    flavor,
+    size,
+    rating,
+    image,
+  });
+
+  $flavorInput.val("");
+  $sizeInput.val("");
+  $ratingInput.val("");
+  $imageInput.val("");
+  showCupcakes();
+}
+
 showCupcakes();
+$submitForm.on("submit", handleForm);
