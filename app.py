@@ -59,26 +59,16 @@ def update_cupcake_field(cupcake_id):
 
     cupcake = Cupcake.query.get_or_404(cupcake_id)
 
-    # req = request.get_json()
-    # print('req type=',type(req))
-
-    # for k, v in req.items():
-    #     print("k=",k)
-    #     print("v=",v)
-    #     cupcake.flavor = v
-
-
-    flavor = request.json["flavor"] or cupcake.flavor
-    size = request.json["size"] or cupcake.size
-    rating = request.json["rating"] or cupcake.rating
-    image = request.json["image"] or cupcake.image
+    flavor = request.json.get("flavor") or cupcake.flavor
+    size = request.json.get("size") or cupcake.size
+    rating = request.json.get("rating") or cupcake.rating
+    image = request.json.get("image") or cupcake.image
 
     cupcake.flavor = flavor
     cupcake.size = size
     cupcake.rating = rating
     cupcake.image = image
 
-    db.session.add(cupcake)
     db.session.commit()
 
     serialized = cupcake.serialize()
@@ -96,4 +86,4 @@ def delete_cupcake(cupcake_id):
 
     db.session.delete(cupcake)
     db.session.commit()
-    return jsonify({"deleted" : cupcake_id})
+    return jsonify(deleted=cupcake_id)
