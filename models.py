@@ -10,7 +10,6 @@ def connect_db(app):
     db.init_app(app)
 
 """Models for Cupcake app."""
-
 class Cupcake(db.Model):
     """Cupcake information"""
 

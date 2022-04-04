@@ -19,7 +19,8 @@ def get_cupcakes():
     cupcakes = Cupcake.query.all()
     serialized = [cupcake.serialize() for cupcake in cupcakes]
 
-    return (jsonify(cupcakes=serialized), 200)
+    # don't need to specify status code if expecting status 200
+    return jsonify(cupcakes=serialized)
 
 @app.get('/api/cupcakes/<int:cupcake_id>')
 def get_single_cupcake(cupcake_id):
@@ -28,7 +29,7 @@ def get_single_cupcake(cupcake_id):
     cupcake = Cupcake.query.get_or_404(cupcake_id)
     serialized = cupcake.serialize()
 
-    return (jsonify(cupcake=serialized), 200)
+    return jsonify(cupcake=serialized)
 
 @app.post('/api/cupcakes')
 def create_cupcake():
