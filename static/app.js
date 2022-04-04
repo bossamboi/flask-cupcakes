@@ -7,26 +7,39 @@ const $sizeInput = $("#size");
 const $ratingInput = $("#rating");
 const $imageInput = $("#image");
 
-/** Clear and populate cupcakes list */
+/** Handles page start */
 
-async function showCupcakes() {
+async function start() {
+  const cupcakes = await getCupcakesData();
   $cupcakeList.html("");
+  showCupcakes(cupcakes);
+}
+
+/** Make GET request to API for all cupcakes. Returns list of cupcake instances */
+
+async function getCupcakesData() {
   let response = await axios.get("/api/cupcakes");
+  return response.data.cupcakes;
+}
 
-  const cupcakes = response.data.cupcakes;
+/** Populates DOM with cupcakes */
+
+function showCupcakes(cupcakes) {
   for (let i = 0; i < cupcakes.length; i++) {
-    let id = cupcakes[i].id;
-    let flavor = cupcakes[i].flavor;
-    let image = cupcakes[i].image;
-    let rating = cupcakes[i].rating;
-    let size = cupcakes[i].size;
-
-    let $html =
-      $(`<li id=${id}><img src="${image}" alt="My ${flavor} cupcake." /> Flavor:
-    ${flavor}, Size: ${size}, Rating: ${rating}</li>`);
+    let $html = createCupcakeHtml(cupcakes[i]);
 
     $cupcakeList.append($html);
   }
+}
+
+/** Takes cupcake object instance and returns html */
+
+function createCupcakeHtml(cupcake) {
+  let $html =
+    $(`<li id=${cupcake.id}><img src="${cupcake.image}" alt="My ${cupcake.flavor} cupcake." /> Flavor:
+${cupcake.flavor}, Size: ${cupcake.size}, Rating: ${cupcake.rating}</li>`);
+
+  return $html;
 }
 
 /** Handles cupcake addition and adds new cupcake to list*/
@@ -39,7 +52,7 @@ async function handleForm(evt) {
   const rating = $ratingInput.val();
   const image = $imageInput.val();
 
-  await axios.post("/api/cupcakes", {
+  const response = await axios.post("/api/cupcakes", {
     flavor,
     size,
     rating,
@@ -50,8 +63,9 @@ async function handleForm(evt) {
   $sizeInput.val("");
   $ratingInput.val("");
   $imageInput.val("");
-  showCupcakes();
+
+  $cupcakeList.append(createCupcakeHtml(response.data.cupcake));
 }
 
-showCupcakes();
+start();
 $submitForm.on("submit", handleForm);
