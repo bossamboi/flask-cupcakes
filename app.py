@@ -92,5 +92,4 @@ def delete_cupcake(cupcake_id):
 def show_cupcakes():
     """Show cupcake list"""
 
-
     return render_template('index.html')

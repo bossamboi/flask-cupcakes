@@ -4,3 +4,13 @@ img {
   width: auto;
   height: auto;
 }
+
+img:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  opacity: 0.6;
+}
+
+li {
+  margin-bottom: 15px;
+}

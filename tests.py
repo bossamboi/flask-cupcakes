@@ -92,6 +92,11 @@ class CupcakeViewsTestCase(TestCase):
                 }
             })
 
+            url = "/api/cupcakes/0"
+            resp = client.get(url)
+
+            self.assertEqual(resp.status_code, 404)
+
     def test_create_cupcake(self):
         with app.test_client() as client:
             url = "/api/cupcakes"
@@ -153,3 +158,8 @@ class CupcakeViewsTestCase(TestCase):
             self.assertEqual(data, {
                 "deleted": self.cupcake.id
             })
+
+            url = "/api/cupcakes/0"
+            resp = client.delete(url)
+
+            self.assertEqual(resp.status_code, 404)

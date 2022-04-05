@@ -6,6 +6,7 @@ const $flavorInput = $("#flavor");
 const $sizeInput = $("#size");
 const $ratingInput = $("#rating");
 const $imageInput = $("#image");
+const $editButton = $(".edit");
 
 /** Handles page start */
 
@@ -37,7 +38,7 @@ function showCupcakes(cupcakes) {
 function createCupcakeHtml(cupcake) {
   let $html =
     $(`<li id=${cupcake.id}><img src="${cupcake.image}" alt="My ${cupcake.flavor} cupcake." /> Flavor:
-${cupcake.flavor}, Size: ${cupcake.size}, Rating: ${cupcake.rating}</li>`);
+    ${cupcake.flavor}, Size: ${cupcake.size}, Rating: ${cupcake.rating} <br><button class="edit">Edit Cupcake</button></li>`);
 
   return $html;
 }
@@ -67,5 +68,40 @@ async function handleForm(evt) {
   $cupcakeList.append(createCupcakeHtml(response.data.cupcake));
 }
 
+async function deleteCupcake(evt) {
+  evt.preventDefault();
+  console.log($(evt.target).parent().attr("id"));
+
+  await axios.delete(`/api/cupcakes/${$(evt.target).parent().attr("id")}`);
+
+  $(evt.target).parent().remove();
+}
+
+async function editCupcake(evt) {
+  evt.preventDefault();
+  const id = $(evt.target).parent().attr("id");
+
+  let response = await axios.get(`/api/cupcakes/${id}`);
+
+  let flavor = prompt("What is the new flavor?", response.data.cupcake.flavor);
+  let size = prompt("What is the new size?", response.data.cupcake.size);
+  let rating = prompt("What is the new rating?", response.data.cupcake.rating);
+  let image = prompt("What is the new image URL?", response.data.cupcake.image);
+
+  let updatedCupcake = await axios.patch(`/api/cupcakes/${id}`, {
+    flavor,
+    size,
+    rating,
+    image,
+  });
+
+  let html = createCupcakeHtml(updatedCupcake.data.cupcake);
+  $(evt.target).parent().after(html);
+
+  $(evt.target).parent().remove();
+}
+
 start();
 $submitForm.on("submit", handleForm);
+$cupcakeList.on("click", "img", deleteCupcake);
+$cupcakeList.on("click", ".edit", editCupcake);
